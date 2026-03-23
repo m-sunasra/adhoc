@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.4">
+  <style type="text/css">
+    body {background-color: #282828}
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Scratch &amp; Win!&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body { background: #f0f2f5; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.container { position: relative; width: 300px; height: 150px; background: #fff; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; border: 4px solid #fff; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>#coupon { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>#coupon h2 { margin: 0; color: #333; font-size: 18px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>#coupon .code { font-size: 28px; font-weight: bold; color: #e91e63; margin-top: 10px; border: 2px dashed #e91e63; padding: 5px 15px; border-radius: 5px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>#scratch-canvas { position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.instruction { margin-top: 20px; color: #666; font-size: 14px; animation: blink 1.5s infinite; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="coupon"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2&gt;Your Coupon Code&lt;/h2&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="code"&gt;SAVE30&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;canvas id="scratch-canvas" width="300" height="150"&gt;&lt;/canvas&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;p class="instruction"&gt;Scratch the silver area to reveal your prize!&lt;/p&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const canvas = document.getElementById('scratch-canvas');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const ctx = canvas.getContext('2d');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let isDrawing = false;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 1. Create the Silver Scratch Layer</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function init() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.fillStyle = '#C0C0C0'; // Silver color</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.fillRect(0, 0, canvas.width, canvas.height);</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// Add some "texture" to make it look like a real scratch card</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.fillStyle = '#A9A9A9';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>for(let i=0; i&lt;100; i++) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 2, 2);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 2. Scratching Functionality</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function scratch(e) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (!isDrawing) return;</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const rect = canvas.getBoundingClientRect();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const x = (e.clientX || e.touches[0].clientX) - rect.left;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const y = (e.clientY || e.touches[0].clientY) - rect.top;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.globalCompositeOperation = 'destination-out'; // This "erases" the silver</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.beginPath();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.arc(x, y, 20, 0, Math.PI * 2); // 20 is the brush size</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>ctx.fill();</span></p>
+<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>checkScratchPercentage();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 3. (Optional) Auto-reveal when 50% is scratched</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function checkScratchPercentage() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const pixels = imageData.data;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let clearPixels = 0;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>for (let i = 3; i &lt; pixels.length; i += 4) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if (pixels[i] === 0) clearPixels++;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const percentage = (clearPixels / (pixels.length / 4)) * 100;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (percentage &gt; 50) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>canvas.style.transition = 'opacity 0.5s';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>canvas.style.opacity = '0';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>setTimeout(() =&gt; canvas.remove(), 500);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Event Listeners for Mouse and Touch</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>canvas.addEventListener('mousedown', () =&gt; isDrawing = true);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>canvas.addEventListener('touchstart', (e) =&gt; { isDrawing = true; e.preventDefault(); });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>window.addEventListener('mouseup', () =&gt; isDrawing = false);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>window.addEventListener('touchend', () =&gt; isDrawing = false);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>canvas.addEventListener('mousemove', scratch);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>canvas.addEventListener('touchmove', scratch);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>init();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
