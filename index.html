@@ -1,54 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scratch & Win!</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Scratch & Win</title>
 
-    <style>
-        body {
-            background: #f0f2f5;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+    }
 
-        .container {
-            position: relative;
-            width: 300px;
-            height: 150px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+    body {
+        background: #f0f2f5;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        touch-action: none;
+    }
 
-        #coupon {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
+    .container {
+        position: relative;
+        width: 300px;
+        height: 150px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        overflow: hidden;
+    }
 
-        .code {
-            font-size: 28px;
-            font-weight: bold;
-            color: #e91e63;
-        }
+    #coupon {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 
-        #scratch-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            cursor: crosshair;
-        }
-    </style>
+    #coupon h2 {
+        margin: 0;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .code {
+        margin-top: 10px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #e91e63;
+        border: 2px dashed #e91e63;
+        padding: 6px 15px;
+        border-radius: 6px;
+    }
+
+    #scratch-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        touch-action: none;
+        cursor: pointer;
+    }
+
+    .instruction {
+        margin-top: 20px;
+        color: #666;
+        font-size: 14px;
+        animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.4; }
+        100% { opacity: 1; }
+    }
+</style>
 </head>
 
 <body>
@@ -61,7 +91,7 @@
     <canvas id="scratch-canvas" width="300" height="150"></canvas>
 </div>
 
-<p>Scratch the area to reveal your prize!</p>
+<p class="instruction">Scratch the card to reveal your prize!</p>
 
 <script>
     const canvas = document.getElementById('scratch-canvas');
@@ -71,24 +101,72 @@
     function init() {
         ctx.fillStyle = '#C0C0C0';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // texture effect
+        ctx.fillStyle = '#A9A9A9';
+        for (let i = 0; i < 100; i++) {
+            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+        }
+    }
+
+    function getXY(e) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches ? e.touches[0] : e;
+
+        return {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
+        };
     }
 
     function scratch(e) {
         if (!isDrawing) return;
 
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.touches[0].clientX) - rect.left;
-        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+        const { x, y } = getXY(e);
 
         ctx.globalCompositeOperation = 'destination-out';
         ctx.beginPath();
         ctx.arc(x, y, 20, 0, Math.PI * 2);
         ctx.fill();
+
+        checkReveal();
     }
 
+    function checkReveal() {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        let cleared = 0;
+
+        for (let i = 3; i < pixels.length; i += 4) {
+            if (pixels[i] === 0) cleared++;
+        }
+
+        const percent = (cleared / (pixels.length / 4)) * 100;
+
+        if (percent > 50) {
+            canvas.style.transition = 'opacity 0.5s';
+            canvas.style.opacity = '0';
+            setTimeout(() => canvas.remove(), 500);
+        }
+    }
+
+    // START
     canvas.addEventListener('mousedown', () => isDrawing = true);
-    window.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('touchstart', (e) => {
+        isDrawing = true;
+        e.preventDefault();
+    }, { passive: false });
+
+    // MOVE
     canvas.addEventListener('mousemove', scratch);
+    canvas.addEventListener('touchmove', (e) => {
+        scratch(e);
+        e.preventDefault();
+    }, { passive: false });
+
+    // END
+    window.addEventListener('mouseup', () => isDrawing = false);
+    window.addEventListener('touchend', () => isDrawing = false);
 
     init();
 </script>
